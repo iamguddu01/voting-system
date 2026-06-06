@@ -106,7 +106,7 @@ export const updateTeam = async(req, res)=>{
 
         for(const key in payload){
             if(allowedKeys?.[key]){
-                payloadForUpdate.key=payload?.[key]
+                payloadForUpdate[key]=payload?.[key]
             }
         }
         if(payloadForUpdate?.email){
@@ -125,7 +125,7 @@ export const updateTeam = async(req, res)=>{
                 })
             }
         }
-        const updatedTeam = await Team.findOneAndUpdate({_id: teamId}, {...payloadForUpdate}, {isNew: true}) 
+        const updatedTeam = await Team.findOneAndUpdate(teamId, {...payloadForUpdate}, {new: true}) 
         return res.status(200).json({
             message: "team updated successfully",
             updateTeam

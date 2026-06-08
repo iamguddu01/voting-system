@@ -1,4 +1,3 @@
-import { Code } from "mongodb";
 import db from "../models/index.js";
 
 const { Team } = db
@@ -95,6 +94,14 @@ export const updateTeam = async(req, res)=>{
     try {
         const teamId = req.params?.teamId
         const { payload } = req.body
+
+        let oldTeam = await Team.findById(teamId);
+        if(!oldTeam){
+            return res.status(400).json({
+                message: "Team does not exist with the given id"
+            })
+        }
+
         let payloadForUpdate = {}
         let allowedKeys = {
             name:true,
@@ -109,7 +116,7 @@ export const updateTeam = async(req, res)=>{
                 payloadForUpdate[key]=payload?.[key]
             }
         }
-        if(payloadForUpdate?.email){
+        if(payloadForUpdate?.email && payloadForUpdate?.email !== oldTeam.email){
             let team = await Team.findOne(  {email: payloadForUpdate?.email});
             if(team){
                 return res.status(400).json({
@@ -117,7 +124,7 @@ export const updateTeam = async(req, res)=>{
                 })
             }
         }
-        if(payloadForUpdate?.code){
+        if(payloadForUpdate?.code && payloadForUpdate?.code.toUpperCase() !== oldTeam.code){
             let team = await Team.findOne({code: payloadForUpdate?.code.toUpperCase()});
             if(team){
                 return res.status(400).json({
@@ -128,7 +135,7 @@ export const updateTeam = async(req, res)=>{
         const updatedTeam = await Team.findOneAndUpdate(teamId, {...payloadForUpdate}, {new: true}) 
         return res.status(200).json({
             message: "team updated successfully",
-            updateTeam
+            updatedTeam
         })
     } catch (error) { 
         return res.status(500).json({

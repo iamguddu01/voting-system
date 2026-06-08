@@ -4,11 +4,13 @@ configDotenv()
 import { handlePassportConfig } from "./config/passport.config.js"
 import authRoutes from "./routes/auth.route.js"
 import teamRoutes from "./routes/team.route.js"
+import electionRoutes from "./routes/election.route.js"
 import { handleMongoDbConnection } from "./config/mongo.config.js"
 const app = express()
 app.use(express.json());
 app.use(authRoutes);
-app.use(teamRoutes)
+app.use(teamRoutes);
+app.use(electionRoutes);
 
 handleMongoDbConnection()
 handlePassportConfig()

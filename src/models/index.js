@@ -1,8 +1,10 @@
+import { Election } from "./Election.js";
 import { Team } from "./Team.js";
 import { User } from "./User.js";
 const db = {
-    User : User,
-    Team : Team,
+    User,
+    Team,
+    Election,
 }
 
 export default db;
